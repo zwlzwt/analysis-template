@@ -1,0 +1,125 @@
+<!-- <!DOCTYPE HTML>
+<head>
+    <meta charset="utf-8">
+    <title>templating</title>
+    <style type="text/css">
+    textarea, button, div {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right:30px;
+    }
+    textarea {
+        width:500px;
+        height:140px;
+    }
+    #container {
+        width:220px;
+        height:110px;
+        padding:15px;
+        border: 1px dashed #CCC;
+    }
+    </style>
+</head>
+<body>
+<textarea id="barretDemo">
+    <% for(var i = 0; i < this.posts.length; i++) {
+        var post = this.posts[i]; %>
+        <% if(!post.expert){ %>
+            <span>post is null</span><br/>
+        <% } else { %>
+            <a href="#"><% post.expert %> at <% post.time %></a><br />
+        <% } %>
+    <% } %>
+</textarea>
+<button id="btn">转换为</button>
+<div id="container"></div>
+
+<script>
+    var data = {
+        "posts": [{
+            "expert": "content 1",
+            "time": "yesterday"
+        },{
+            "expert": "content 2",
+            "time": "today"
+        },{
+            "expert": "content 3",
+            "time": "tomorrow"
+        },{
+            "expert": "",
+            "time": "eee"
+        }]
+    };
+     var barretTpl = function(str, data) {
+
+            //获取元素
+            var element = document.getElementById(str);
+            if (element) {
+                //textarea或input则取value，其它情况取innerHTML
+                var html = /^(textarea|input)$/i.test(element.nodeName) ? element.value : element.innerHTML;
+                return tplEngine(html, data);
+            } else {
+                //是模板字符串，则生成一个函数
+                //如果直接传入字符串作为模板，则可能变化过多，因此不考虑缓存
+                return tplEngine(str, data);
+            }
+
+    		function tplEngine(tpl, data) {
+    		    var reg = /<%([^%>]+)?%>/g,   // 匹配模版里的字符串
+    		        regOut = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g, // 把js语法代码匹配出去
+    		        code = 'var r=[];\n',
+    		        cursor = 0;
+
+    		    var add = function(line, js) {
+    		        js? (code += line.match(regOut) ? line + '\n' : 'r.push(' + line + ');\n') :
+    		            (code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
+    		        return add;
+    		    }
+    		    while(match = reg.exec(tpl)) {
+    		        add(tpl.slice(cursor, match.index))(match[1], true);
+    		        cursor = match.index + match[0].length;
+    		    }
+    		    add(tpl.substr(cursor, tpl.length - cursor));
+    		    code += 'return r.join("");';
+    		    console.log(code.replace(/[\r\t\n]/g, ''));
+    		    return new Function(code.replace(/[\r\t\n]/g, '')).apply(data);
+    		};
+    };
+    document.getElementById("btn").onclick = function(){
+    	document.getElementById("container").innerHTML = barretTpl("barretDemo",data);
+    }
+</script>
+
+</body>
+</html>
+-->
+
+
+<!DOCTYPE html>
+<html>
+<title>正则表达式</title>
+<head>
+<meta charset="utf-8">
+</head>
+<script type="text/javascript">
+	//只能输入1-9999正整数
+	function clearInput(obj){
+		obj.value = obj.value.replace(/[^\d]/g,"");
+		obj.value = obj.value.replace(/^0.*$/g,"");
+		obj.value = obj.value.replace(/^([1-9])(\d{3}).*$/,'$2我才发想你'); //只能输入两个小数
+	}
+	function alertMessage(){
+		var value=document.getElementById('digit').value;
+		var regx=/\d{3}/;
+		if (regx.test(value)) {
+			alert("是3位");
+		}else{
+			alert("不是3位");
+		};
+	}
+</script>
+<body>
+	四位正整数:<input id="digit" type="text" onkeyup="clearInput(this)" onafterpaste="clearInput(this)">
+	<input type="button" onclick="alertMessage()" value="有几位数字">
+</body>
+<html>
